@@ -1,7 +1,7 @@
 
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Menu, X, ChevronDown } from "lucide-react";
+import { Menu, X, ChevronDown, Camera, User } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const Navbar = () => {
@@ -21,7 +21,16 @@ const Navbar = () => {
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center space-x-6">
           <NavLinks />
-          <Button className="bg-regeni-purple hover:bg-regeni-purple/90 text-white">Get Started</Button>
+          <Link to="/scan">
+            <Button className="bg-regeni-green hover:bg-regeni-green/90 text-white mr-2">
+              <Camera className="h-4 w-4 mr-2" /> Scan
+            </Button>
+          </Link>
+          <Link to="/account">
+            <Button variant="outline" className="border-regeni-purple text-regeni-purple hover:bg-regeni-lightpurple">
+              <User className="h-4 w-4 mr-2" /> My Account
+            </Button>
+          </Link>
         </div>
 
         {/* Mobile Menu Button */}
@@ -41,7 +50,16 @@ const Navbar = () => {
         <div className="md:hidden bg-white border-t">
           <div className="container mx-auto px-4 py-4 flex flex-col space-y-4">
             <MobileNavLinks closeMenu={() => setIsMenuOpen(false)} />
-            <Button className="bg-regeni-purple hover:bg-regeni-purple/90 text-white">Get Started</Button>
+            <Link to="/scan" onClick={() => setIsMenuOpen(false)}>
+              <Button className="bg-regeni-green hover:bg-regeni-green/90 text-white w-full mb-2">
+                <Camera className="h-4 w-4 mr-2" /> Scan
+              </Button>
+            </Link>
+            <Link to="/account" onClick={() => setIsMenuOpen(false)}>
+              <Button variant="outline" className="border-regeni-purple text-regeni-purple hover:bg-regeni-lightpurple w-full">
+                <User className="h-4 w-4 mr-2" /> My Account
+              </Button>
+            </Link>
           </div>
         </div>
       )}
