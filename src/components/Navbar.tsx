@@ -1,7 +1,7 @@
 
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Menu, X, ChevronDown, Camera, User } from "lucide-react";
+import { Menu, X, ChevronDown, Camera, User, Recycle } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const Navbar = () => {
@@ -24,6 +24,11 @@ const Navbar = () => {
           <Link to="/scan">
             <Button className="bg-regeni-green hover:bg-regeni-green/90 text-white mr-2">
               <Camera className="h-4 w-4 mr-2" /> Scan
+            </Button>
+          </Link>
+          <Link to="/deposit">
+            <Button className="bg-regeni-purple hover:bg-regeni-purple/90 text-white mr-2">
+              <Recycle className="h-4 w-4 mr-2" /> Deposit
             </Button>
           </Link>
           <Link to="/account">
@@ -53,6 +58,11 @@ const Navbar = () => {
             <Link to="/scan" onClick={() => setIsMenuOpen(false)}>
               <Button className="bg-regeni-green hover:bg-regeni-green/90 text-white w-full mb-2">
                 <Camera className="h-4 w-4 mr-2" /> Scan
+              </Button>
+            </Link>
+            <Link to="/deposit" onClick={() => setIsMenuOpen(false)}>
+              <Button className="bg-regeni-purple hover:bg-regeni-purple/90 text-white w-full mb-2">
+                <Recycle className="h-4 w-4 mr-2" /> Deposit
               </Button>
             </Link>
             <Link to="/account" onClick={() => setIsMenuOpen(false)}>

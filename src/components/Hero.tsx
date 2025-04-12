@@ -2,6 +2,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Sparkles } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Hero = () => {
   return (
@@ -28,9 +29,11 @@ const Hero = () => {
           </p>
           
           <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <Button size="lg" className="bg-regeni-purple hover:bg-regeni-purple/90 text-white px-8 py-6">
-              Get Started
-            </Button>
+            <Link to="/scan">
+              <Button size="lg" className="bg-regeni-purple hover:bg-regeni-purple/90 text-white px-8 py-6">
+                Get Started
+              </Button>
+            </Link>
             <Button 
               size="lg" 
               variant="outline" 

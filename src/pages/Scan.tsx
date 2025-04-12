@@ -3,13 +3,19 @@ import React, { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Camera, Loader2, Send, RefreshCw } from "lucide-react";
+import { Camera, Loader2, Send, RefreshCw, Youtube } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
 interface AIResponse {
   text: string;
   imageUrl: string | null;
+  videoLinks?: VideoLink[];
+}
+
+interface VideoLink {
+  title: string;
+  url: string;
 }
 
 const Scan = () => {
@@ -104,25 +110,62 @@ const Scan = () => {
         "Electronics (e-waste)": "https://storage.googleapis.com/pai-images/c2dae67495174b428e631d8425a769cf.jpeg"
       };
       
+      // Video links based on material type
+      const videoLinks = {
+        "Plastic bottle (PET)": [
+          { title: "How to Properly Recycle Plastic Bottles", url: "https://www.youtube.com/watch?v=I_fUpP-hq3A" },
+          { title: "DIY Crafts with Plastic Bottles", url: "https://www.youtube.com/watch?v=GXZJlBR9v0U" }
+        ],
+        "Aluminum can": [
+          { title: "Recycling Process for Aluminum Cans", url: "https://www.youtube.com/watch?v=KmMP67eC2tg" },
+          { title: "Creative Ways to Reuse Aluminum Cans", url: "https://www.youtube.com/watch?v=xn7ZKkjW5Gk" }
+        ],
+        "Glass container": [
+          { title: "Glass Recycling Process Explained", url: "https://www.youtube.com/watch?v=6R8YObQbE88" },
+          { title: "Upcycling Glass Jars - DIY Projects", url: "https://www.youtube.com/watch?v=LMT3d9m5Wgg" }
+        ],
+        "Cardboard packaging": [
+          { title: "Creative Cardboard Recycling Ideas", url: "https://www.youtube.com/watch?v=9JUzhyJFRRo" },
+          { title: "How Cardboard is Recycled", url: "https://www.youtube.com/watch?v=Pla06PGIJpE" }
+        ],
+        "Food waste": [
+          { title: "Beginners Guide to Composting", url: "https://www.youtube.com/watch?v=znajCAfZJSI" },
+          { title: "Reducing Food Waste at Home", url: "https://www.youtube.com/watch?v=c7UW8SoGhm8" }
+        ],
+        "Electronics (e-waste)": [
+          { title: "Why Electronics Recycling is Important", url: "https://www.youtube.com/watch?v=d-YJqZUBt8c" },
+          { title: "What Happens to E-waste?", url: "https://www.youtube.com/watch?v=ITwYEpywjEU" }
+        ]
+      };
+      
       const baseResponse = responses[scanResult as keyof typeof responses] || 
         "I don't have specific information about this material. Generally, it's best to check your local recycling guidelines.";
       
       // Generate response based on user query
       let customResponse;
+      let selectedVideos;
       
-      if (userQuery.toLowerCase().includes("recycle")) {
+      if (userQuery.toLowerCase().includes("video") || userQuery.toLowerCase().includes("watch") || userQuery.toLowerCase().includes("how to")) {
+        customResponse = `Here are some helpful videos about handling ${scanResult}:`;
+        selectedVideos = videoLinks[scanResult as keyof typeof videoLinks] || [];
+      } else if (userQuery.toLowerCase().includes("recycle")) {
         customResponse = baseResponse + " For recycling, check if your local facility accepts this material and follow their guidelines.";
+        selectedVideos = videoLinks[scanResult as keyof typeof videoLinks] || [];
       } else if (userQuery.toLowerCase().includes("reuse")) {
         customResponse = `You can creatively reuse this ${scanResult} in various DIY projects. For example, plastic bottles can be turned into planters, bird feeders, or even decorative items.`;
+        selectedVideos = videoLinks[scanResult as keyof typeof videoLinks] || [];
       } else if (userQuery.toLowerCase().includes("impact") || userQuery.toLowerCase().includes("environment")) {
         customResponse = `Properly handling ${scanResult} has significant environmental benefits. Each recycled item reduces landfill waste and conserves natural resources.`;
+        selectedVideos = videoLinks[scanResult as keyof typeof videoLinks] || [];
       } else {
         customResponse = baseResponse;
+        selectedVideos = videoLinks[scanResult as keyof typeof videoLinks] || [];
       }
       
       setAiResponse({
         text: customResponse,
-        imageUrl: imageUrls[scanResult as keyof typeof imageUrls] || null
+        imageUrl: imageUrls[scanResult as keyof typeof imageUrls] || null,
+        videoLinks: selectedVideos
       });
       
       setIsLoading(false);
@@ -223,7 +266,7 @@ const Scan = () => {
                   <Input
                     value={userQuery}
                     onChange={(e) => setUserQuery(e.target.value)}
-                    placeholder="Ask about recycling, reuse ideas, environmental impact..."
+                    placeholder="Ask about recycling, reuse ideas, environmental impact, or videos..."
                     className="flex-grow"
                     onKeyDown={(e) => {
                       if (e.key === 'Enter') handleAiQuery();
@@ -244,7 +287,7 @@ const Scan = () => {
                   <p className="text-gray-700 mb-4">{aiResponse.text}</p>
                   
                   {aiResponse.imageUrl && (
-                    <div className="rounded-lg overflow-hidden">
+                    <div className="rounded-lg overflow-hidden mb-4">
                       <img 
                         src={aiResponse.imageUrl} 
                         alt="AI visualization" 
@@ -253,6 +296,29 @@ const Scan = () => {
                       <p className="text-xs text-gray-500 mt-1 text-center italic">
                         AI-generated visualization of creative reuse concept
                       </p>
+                    </div>
+                  )}
+                  
+                  {aiResponse.videoLinks && aiResponse.videoLinks.length > 0 && (
+                    <div className="mt-4">
+                      <h3 className="text-regeni-darkblue font-semibold flex items-center gap-2 mb-3">
+                        <Youtube className="text-red-600" /> 
+                        Helpful Videos
+                      </h3>
+                      <div className="space-y-2">
+                        {aiResponse.videoLinks.map((video, index) => (
+                          <a 
+                            key={index} 
+                            href={video.url} 
+                            target="_blank" 
+                            rel="noopener noreferrer" 
+                            className="flex items-center gap-2 p-2 bg-white rounded-md hover:bg-regeni-lightpurple transition-colors"
+                          >
+                            <Youtube className="h-5 w-5 text-red-600 flex-shrink-0" />
+                            <span className="text-regeni-darkblue">{video.title}</span>
+                          </a>
+                        ))}
+                      </div>
                     </div>
                   )}
                 </div>
