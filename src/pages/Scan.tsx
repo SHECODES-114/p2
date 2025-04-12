@@ -7,11 +7,16 @@ import { Camera, Loader2, Send, RefreshCw } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
+interface AIResponse {
+  text: string;
+  imageUrl: string | null;
+}
+
 const Scan = () => {
   const [isScanning, setIsScanning] = useState(false);
   const [scanResult, setScanResult] = useState<string | null>(null);
   const [userQuery, setUserQuery] = useState("");
-  const [aiResponse, setAiResponse] = useState<string | null>(null);
+  const [aiResponse, setAiResponse] = useState<AIResponse | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -210,7 +215,7 @@ const Scan = () => {
           {scanResult && (
             <div className="max-w-2xl mx-auto glass-card p-6 mb-8">
               <h2 className="text-xl font-semibold mb-4 text-regeni-darkblue">
-                Ask AI About This Material
+                Ask RegeniScan About This Material
               </h2>
               
               <div className="mb-4">
